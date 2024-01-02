@@ -1,4 +1,5 @@
 # job4j_threads
+
 job4j.ru middle java developer
 
 Задание.
@@ -9,3 +10,4 @@ job4j.ru middle java developer
    --amend
 4. Объединение зафиксированных изменений
 5. В курсе производилась работа с ветками git.
+6. merge task_126026
