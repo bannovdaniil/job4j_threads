@@ -8,3 +8,5 @@ job4j.ru middle java developer
 2. Внесите изменения в файл README.md
 3. hotfix_139840
    --amend
+4. Объединение зафиксированных изменений
+5. 
