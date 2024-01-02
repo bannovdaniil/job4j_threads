@@ -9,4 +9,4 @@ job4j.ru middle java developer
 3. hotfix_139840
    --amend
 4. Объединение зафиксированных изменений
-5. 
+5. task_126026
