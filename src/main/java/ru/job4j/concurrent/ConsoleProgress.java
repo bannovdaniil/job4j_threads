@@ -6,11 +6,11 @@ package ru.job4j.concurrent;
  * Thread.currentThread().isInterrupted()
  */
 public class ConsoleProgress implements Runnable {
-    private final char[] process = new char[]{'-', '\\', '|', '/'};
-    private int index = 0;
 
     @Override
     public void run() {
+        final char[] process = new char[]{'-', '\\', '|', '/'};
+        int index = 0;
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 System.out.printf("\rload: %s", process[index++]);
