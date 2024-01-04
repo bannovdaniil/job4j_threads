@@ -4,6 +4,8 @@ package ru.job4j.concurrent;
  * 5. Прерывание нити [#1019]
  * Thread.interrupt()
  * Thread.currentThread().isInterrupted()
+ * <p>
+ * если используются методы sleep(), join(), wait() или аналогичные временно блокирующие поток методы, то нужно в блоке catch вызвать прерывание.
  */
 public class ConsoleProgress implements Runnable {
 
@@ -19,7 +21,7 @@ public class ConsoleProgress implements Runnable {
                 }
                 Thread.sleep(500);
             } catch (InterruptedException e) {
-                break;
+                Thread.currentThread().interrupt();
             }
         }
     }
