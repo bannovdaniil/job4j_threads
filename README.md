@@ -48,4 +48,5 @@ job4j.ru middle java developer
 
 1. Синхронизация общих ресурсов. [ru.job4j.Cache]
    Исправить ошибку атомарности в коде.
-2. 
+2. Модель памяти Java [ru.job4j.DCLSingleton]
+   Код синглтона - double check locking. Исправьте в нем ошибку.
