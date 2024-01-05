@@ -50,3 +50,6 @@ job4j.ru middle java developer
    Исправить ошибку атомарности в коде.
 2. Модель памяти Java [ru.job4j.DCLSingleton]
    Код синглтона - double check locking. Исправьте в нем ошибку.
+3. Immutable объекты [ru.job4j.linked.Node<T>]
+   Сделайте этот класс Immutable.
+4. 
