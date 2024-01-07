@@ -2,7 +2,6 @@ package ru.job4j.collections;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
-import ru.job4j.coolections.SimpleBlockingQueue;
 
 class SimpleBlockingQueueTest {
 
