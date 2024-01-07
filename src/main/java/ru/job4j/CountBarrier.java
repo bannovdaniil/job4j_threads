@@ -1,5 +1,8 @@
 package ru.job4j;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 /**
  * Разработайте класс, который блокирует выполнение по условию счетчика.
  * <p>
@@ -10,18 +13,23 @@ package ru.job4j;
  * Если оно не равно, то нужно перевести нить в состояние wait.
  * - Здесь нужно использовать цикл while для проверки состояния, а не оператор if.
  */
+@ThreadSafe
 public class CountBarrier {
     private final Object monitor = this;
+    @GuardedBy("monitor")
     private final int total;
-    private int count = 0;
+    @GuardedBy("monitor")
+    private int count;
 
     public CountBarrier(final int total) {
         this.total = total;
     }
 
-    public synchronized void count() {
-        count++;
-        monitor.notifyAll();
+    public void count() {
+        synchronized (monitor) {
+            count++;
+            monitor.notifyAll();
+        }
     }
 
     public void await() {
