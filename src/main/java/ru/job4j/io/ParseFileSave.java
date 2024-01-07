@@ -1,6 +1,9 @@
 package ru.job4j.io;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Поправьте код с ошибками в коде.
@@ -18,9 +21,9 @@ public class ParseFileSave {
     }
 
     public synchronized void saveContent(String content) throws IOException {
-        try (OutputStream o = new BufferedOutputStream(new FileOutputStream(file))) {
-            o.write(content.getBytes(), 0, content.getBytes().length);
-            o.flush();
+        try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+            outputStream.write(content.getBytes(), 0, content.getBytes().length);
+            outputStream.flush();
         } catch (IOException e) {
             throw new IOException(e);
         }

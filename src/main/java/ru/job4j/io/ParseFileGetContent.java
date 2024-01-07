@@ -1,6 +1,9 @@
 package ru.job4j.io;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.function.Predicate;
 
 /**
@@ -27,20 +30,20 @@ public class ParseFileGetContent {
     }
 
     private synchronized String getContentWithPredicate(Predicate<Character> filter) throws IOException {
-        StringBuilder output = new StringBuilder();
-        try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
+        StringBuilder content = new StringBuilder();
+        try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file))) {
             byte[] data = new byte[1024];
-            int size = 0;
-            while ((size = input.read(data, 0, data.length)) > 0) {
+            int size;
+            while ((size = inputStream.read(data, 0, data.length)) != -1) {
                 for (int i = 0; i < size; i++) {
                     if (filter.test((char) data[i])) {
-                        output.append((char) data[i]);
+                        content.append((char) data[i]);
                     }
                 }
             }
         } catch (IOException e) {
             throw new IOException(e);
         }
-        return output.toString();
+        return content.toString();
     }
 }
