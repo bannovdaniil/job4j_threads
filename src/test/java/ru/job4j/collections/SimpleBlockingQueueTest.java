@@ -2,9 +2,11 @@ package ru.job4j.collections;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.TestInfo;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 class SimpleBlockingQueueTest {
-
     /**
      * 1. Стартует потребитель 1 он пытается достать числа из очереди
      * 2. Стартует производитель1 он добавляет числа в очередь от 0 до 100,
@@ -18,21 +20,28 @@ class SimpleBlockingQueueTest {
      * 7.добавляем число которое не участвовало в процессе.
      * 8.пытаемся его достать. Если число удалось достать, значит тест прошел успешно.
      */
-    @RepeatedTest(5)
-    void offer() throws InterruptedException {
-        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
+    @RepeatedTest(500)
+    void offer(TestInfo testInfo) throws InterruptedException {
+        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
+        AtomicInteger countOffer = new AtomicInteger();
+        AtomicInteger countPoll = new AtomicInteger();
 
         Runnable producer = () -> {
             for (int i = 0; i < 100; i++) {
-                queue.offer(i);
+                try {
+                    queue.offer(i);
+                    countOffer.incrementAndGet();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         };
 
         Runnable consumer = () -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    int getNum = queue.poll();
-                    System.out.println(Thread.currentThread().getName() + " getNum = " + getNum);
+                    queue.poll();
+                    countPoll.incrementAndGet();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -41,29 +50,25 @@ class SimpleBlockingQueueTest {
 
         Thread consumer1 = new Thread(consumer, "consumer1");
         Thread consumer2 = new Thread(consumer, "consumer2");
+        Thread consumer3 = new Thread(consumer, "consumer3");
+
         Thread producer1 = new Thread(producer, "producer1");
         Thread producer2 = new Thread(producer, "producer2");
 
-        consumer1.start();
         producer1.start();
+        consumer1.start();
+        consumer2.start();
         producer1.join();
 
         producer2.start();
-        consumer2.start();
+        consumer3.start();
         producer2.join();
 
-        consumer1.interrupt();
-        while (consumer2.getState() != Thread.State.WAITING) {
-            Thread.sleep(1);
+        while (countOffer.get() != countPoll.get()) {
+            System.out.println("\rwait - " + testInfo.getDisplayName());
         }
 
-        consumer2.interrupt();
-        while (consumer2.getState() != Thread.State.TERMINATED) {
-            Thread.sleep(1);
-        }
-
-        queue.offer(777);
-        Assertions.assertEquals(777, queue.poll());
+        Assertions.assertEquals(countOffer.get(), countPoll.get());
     }
 
 }
