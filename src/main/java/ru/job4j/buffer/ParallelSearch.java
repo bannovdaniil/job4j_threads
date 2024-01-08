@@ -7,8 +7,8 @@ import ru.job4j.collections.SimpleBlockingQueue;
  */
 public class ParallelSearch {
 
-    public static void main(String[] args) {
-        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
+    public static void main(String[] args) throws InterruptedException {
+        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
         final Thread consumer = new Thread(
                 () -> {
                     while (!Thread.currentThread().isInterrupted()) {
@@ -19,32 +19,27 @@ public class ParallelSearch {
                             Thread.currentThread().interrupt();
                         }
                     }
-                }
+                }, "consumer"
         );
-        consumer.start();
-        new Thread(
+
+        Thread producer = new Thread(
                 () -> {
                     for (int index = 0; index != 3 && !Thread.currentThread().isInterrupted(); index++) {
-                        queue.offer(index);
                         try {
+                            queue.offer(index);
+                            System.out.println(index);
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                             Thread.currentThread().interrupt();
                         }
                     }
-                    while (consumer.getState() != Thread.State.WAITING
-                            && consumer.getState() != Thread.State.TERMINATED
-                    ) {
-                        try {
-                            consumer.join(500);
-                        } catch (InterruptedException e) {
-                            consumer.interrupt();
-                        }
-                    }
-                    consumer.interrupt();
-                }
-        ).start();
+                }, "producer"
+        );
 
+        consumer.start();
+        producer.start();
+        producer.join();
+        consumer.interrupt();
     }
 }
