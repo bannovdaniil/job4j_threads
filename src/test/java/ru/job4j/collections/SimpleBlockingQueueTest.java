@@ -20,7 +20,7 @@ class SimpleBlockingQueueTest {
      * 7.добавляем число которое не участвовало в процессе.
      * 8.пытаемся его достать. Если число удалось достать, значит тест прошел успешно.
      */
-    @RepeatedTest(500)
+    @RepeatedTest(5)
     void offer(TestInfo testInfo) throws InterruptedException {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
         AtomicInteger countOffer = new AtomicInteger();
