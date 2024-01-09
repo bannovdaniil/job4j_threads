@@ -2,22 +2,26 @@ package ru.job4j;
 
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * AtomicInteger - класс для атомарных операций со ссылкой на объект.
+ * AtomicReference - класс для атомарных операций со ссылкой на объект.
  * Реализовать неблокирующий счетчик.
  */
 @ThreadSafe
 public class CASCount {
-    private final AtomicInteger count;
+    private final AtomicReference<Integer> count;
 
     public CASCount(int count) {
-        this.count = new AtomicInteger(count);
+        this.count = new AtomicReference<>();
+        this.count.set(count);
     }
 
     public void increment() {
-        count.incrementAndGet();
+        Integer currentValue;
+        do {
+            currentValue = count.get();
+        } while (!count.compareAndSet(currentValue, currentValue + 1));
     }
 
     public int get() {

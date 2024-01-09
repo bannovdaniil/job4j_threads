@@ -1,16 +1,17 @@
 package ru.job4j;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 class CASCountTest {
 
-    @Test
+    @RepeatedTest(5)
     void doInThread() throws InterruptedException {
         CASCount count = new CASCount(0);
 
         Runnable increment = () -> {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10000; i++) {
                 count.increment();
             }
         };
@@ -27,7 +28,7 @@ class CASCountTest {
         two.join();
         three.join();
 
-        Assertions.assertEquals(30, count.get());
+        Assertions.assertEquals(30000, count.get());
     }
 
 }

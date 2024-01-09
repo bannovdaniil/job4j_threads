@@ -97,8 +97,8 @@ job4j.ru middle java developer
 
 #### 3.1.5. Non Blocking Algoritm
 
-0. CAS - операции [ru.job4j.CASCount, ru.job4j.CASCountAtomicReference]
-   AtomicReference, AtomicInteger
+0. CAS - операции [ru.job4j.CASCount]
+   AtomicReference
    Операции write и read по отдельности атомарны. volatile обеспечивает правильную публикацию изменений.
    Но во многих случаях нам нужны действия check-then-act. Чтобы этого добиться, нужно делать синхронизацию.
    Синхронизация блокирует выполнение нитей, то есть программа из многопоточной превращается в однопоточную. 
