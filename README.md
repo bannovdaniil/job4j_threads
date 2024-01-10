@@ -112,3 +112,8 @@ job4j.ru middle java developer
 1. Реализовать ThreadPool [ru.job4j.pool.ThreadPool]
    Пул - это хранилище для ресурсов, которые можно переиспользовать. Клиент берет ресурс из пула, выполняет свою работу
    и возвращает обратно в пул.
+2. ExecutorService рассылка почты. [ru.job4j.sender.EmailNotification]
+   2.1. Реализовать сервис для рассылки почты. Создайте класс EmailNotification.
+   2.2. В классе будет метод emailTo(User user) - он должен через ExecutorService отправлять почту.
+   2.3. Так же добавьте метод close() - он должен закрыть pool. То есть в классе EmailNotification должно быть поле
+   pool, которые используется в emailTo и close().
