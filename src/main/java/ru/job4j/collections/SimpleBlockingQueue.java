@@ -18,6 +18,11 @@ public class SimpleBlockingQueue<T> {
     @GuardedBy("this")
     private final Queue<T> queue = new LinkedList<>();
     private final int maxSize;
+    private static final int DEFAULT_MAX_SIZE = 100;
+
+    public SimpleBlockingQueue() {
+        this.maxSize = DEFAULT_MAX_SIZE;
+    }
 
     public SimpleBlockingQueue(int maxSize) {
         this.maxSize = maxSize;
