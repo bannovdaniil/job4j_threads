@@ -6,7 +6,8 @@ import java.util.concurrent.RecursiveTask;
 
 /**
  * Реализовать параллельный поиск индекса в массиве объектов. В целях оптимизации,
- * если размер массива не больше 10, использовать обычный линейный поиск. Метод поиска должен быть обобщенным.
+ * если размер массива не больше 10, использовать обычный линейный поиск.
+ * Метод поиска должен быть обобщенным.
  */
 public class RecursiveSearchWithForkJoinPool<T> extends RecursiveTask<Integer> {
     private static final int FAST_SEARCH_RANGE = 10;

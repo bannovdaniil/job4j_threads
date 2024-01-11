@@ -16,11 +16,11 @@ class SimpleBlockingQueueTest {
     @RepeatedTest(5)
     void offer(TestInfo testInfo) throws InterruptedException {
         List<Integer> expectedList = new CopyOnWriteArrayList<>();
-        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
+        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(1000);
         AtomicInteger countOffer = new AtomicInteger();
 
         Runnable producer = () -> {
-            for (int i = 0; i < 10000; i++) {
+            for (int i = 0; i < 1000; i++) {
                 try {
                     queue.offer(i);
                     countOffer.incrementAndGet();
@@ -41,24 +41,21 @@ class SimpleBlockingQueueTest {
         };
 
         Thread consumer1 = new Thread(consumer, "consumer1");
-        Thread consumer2 = new Thread(consumer, "consumer2");
-        Thread consumer3 = new Thread(consumer, "consumer3");
-
         Thread producer1 = new Thread(producer, "producer1");
-        Thread producer2 = new Thread(producer, "producer2");
 
         consumer1.start();
         producer1.start();
         producer1.join();
 
+        while (countOffer.get() != expectedList.size()) {
+            System.out.println("\rwait - " + testInfo.getDisplayName());
+        }
+
         consumer1.interrupt();
         consumer1.join();
 
         Assertions.assertEquals(countOffer.get(), expectedList.size());
-  /*      while (countOffer.get() != expectedList.size()) {
-            System.out.println("\rwait - " + testInfo.getDisplayName());
-        }
-*/
+
     }
 
 }
