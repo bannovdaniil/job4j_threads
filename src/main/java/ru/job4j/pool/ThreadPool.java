@@ -24,13 +24,15 @@ public class ThreadPool {
             threads.add(new Thread(() -> {
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
-                        tasks.poll();
+                        Runnable job = tasks.poll();
+                        new Thread(job).start();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
                 }
             }));
         }
+        threads.forEach(Thread::start);
     }
 
     public void work(Runnable job) throws InterruptedException {
@@ -39,5 +41,19 @@ public class ThreadPool {
 
     public void shutdown() {
         threads.forEach(Thread::interrupt);
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ThreadPool threadPool = new ThreadPool();
+        Runnable job = () -> System.out.printf("My name is: %s , my status is: %s%n",
+                Thread.currentThread().getName(),
+                Thread.currentThread().getState()
+        );
+
+        for (int i = 0; i < 10; i++) {
+            threadPool.work(job);
+        }
+
+        threadPool.shutdown();
     }
 }
