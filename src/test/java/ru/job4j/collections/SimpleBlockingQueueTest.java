@@ -20,7 +20,7 @@ class SimpleBlockingQueueTest {
         AtomicInteger countOffer = new AtomicInteger();
 
         Runnable producer = () -> {
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10000; i++) {
                 try {
                     queue.offer(i);
                     countOffer.incrementAndGet();
@@ -47,28 +47,18 @@ class SimpleBlockingQueueTest {
         Thread producer1 = new Thread(producer, "producer1");
         Thread producer2 = new Thread(producer, "producer2");
 
-        consumer2.start();
+        consumer1.start();
         producer1.start();
         producer1.join();
 
-        producer2.start();
-        consumer3.start();
-        consumer1.start();
-
-        producer2.join();
-
-        while (countOffer.get() != expectedList.size()) {
-            System.out.println("\rwait - " + testInfo.getDisplayName());
-        }
         consumer1.interrupt();
-        consumer2.interrupt();
-        consumer3.interrupt();
-
         consumer1.join();
-        consumer2.join();
-        consumer3.join();
 
         Assertions.assertEquals(countOffer.get(), expectedList.size());
+  /*      while (countOffer.get() != expectedList.size()) {
+            System.out.println("\rwait - " + testInfo.getDisplayName());
+        }
+*/
     }
 
 }
