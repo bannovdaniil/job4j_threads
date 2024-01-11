@@ -117,3 +117,6 @@ job4j.ru middle java developer
    2.2. В классе будет метод emailTo(User user) - он должен через ExecutorService отправлять почту.
    2.3. Так же добавьте метод close() - он должен закрыть pool. То есть в классе EmailNotification должно быть поле
    pool, которые используется в emailTo и close().
+3. ForkJoinPool [ru.job4j.search.RecursiveSearchWithForkJoinPool]
+   Реализовать параллельный поиск индекса в массиве объектов. В целях оптимизации, если размер массива не больше 10,
+   использовать обычный линейный поиск. Метод поиска должен быть обобщенным.
