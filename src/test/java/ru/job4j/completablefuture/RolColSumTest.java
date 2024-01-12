@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import ru.job4j.completablefuture.model.Sums;
 
 import java.util.concurrent.ExecutionException;
 
@@ -18,14 +19,12 @@ class RolColSumTest {
             "4, '4,8,12,14', '11,10,9,8', '1,1,1,1:2,2,2,2:3,3,3,3:5,4,3,2'"
     })
     void sum(int size, String expectedRowString, String expectedColString, String matrixString) {
-        RolColSum.Sums[] expectedSums = getExpectedSums(size, expectedRowString, expectedColString);
+        Sums[] expectedSums = getExpectedSums(size, expectedRowString, expectedColString);
         int[][] matrix = getMatrix(size, matrixString);
 
-        RolColSum.Sums[] resultSum = RolColSum.sum(matrix);
-        for (int i = 0; i < size; i++) {
-            Assertions.assertEquals(expectedSums[i].getRowSum(), resultSum[i].getRowSum());
-            Assertions.assertEquals(expectedSums[i].getColSum(), resultSum[i].getColSum());
-        }
+        Sums[] resultSum = RolColSum.sum(matrix);
+
+        Assertions.assertArrayEquals(expectedSums, resultSum);
     }
 
     @DisplayName("CompletableFuture sum")
@@ -38,23 +37,21 @@ class RolColSumTest {
             "5, '5,10,20,15,19', '12,12,16,12,17', '1,1,1,1,1:2,2,2,2,2:3,3,3,3,8:5,4,3,2,1:1,2,7,4,5'"
     })
     void asyncSum(int size, String expectedRowString, String expectedColString, String matrixString) throws ExecutionException, InterruptedException {
-        RolColSum.Sums[] expectedSums = getExpectedSums(size, expectedRowString, expectedColString);
+        Sums[] expectedSums = getExpectedSums(size, expectedRowString, expectedColString);
         int[][] matrix = getMatrix(size, matrixString);
 
-        RolColSum.Sums[] resultSum = RolColSum.asyncSum(matrix);
-        for (int i = 0; i < size; i++) {
-            Assertions.assertEquals(expectedSums[i].getRowSum(), resultSum[i].getRowSum());
-            Assertions.assertEquals(expectedSums[i].getColSum(), resultSum[i].getColSum());
-        }
+        Sums[] resultSum = RolColSum.asyncSum(matrix);
+
+        Assertions.assertArrayEquals(expectedSums, resultSum);
     }
 
-    private static RolColSum.Sums[] getExpectedSums(int size, String expectedRowString, String expectedColString) {
-        RolColSum.Sums[] expectedSums = new RolColSum.Sums[size];
+    private static Sums[] getExpectedSums(int size, String expectedRowString, String expectedColString) {
+        Sums[] expectedSums = new Sums[size];
 
         String[] expectedRow = expectedRowString.split(",");
         String[] expectedCol = expectedColString.split(",");
         for (int i = 0; i < size; i++) {
-            expectedSums[i] = new RolColSum.Sums();
+            expectedSums[i] = new Sums();
             expectedSums[i].setColSum(Integer.parseInt(expectedCol[i]));
             expectedSums[i].setRowSum(Integer.parseInt(expectedRow[i]));
         }

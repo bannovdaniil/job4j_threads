@@ -1,5 +1,7 @@
 package ru.job4j.completablefuture;
 
+import ru.job4j.completablefuture.model.Sums;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,19 +21,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 4. Написать тесты
  */
 public class RolColSum {
-
     public static Sums[] sum(int[][] matrix) {
         Sums[] sums = new Sums[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
             sums[i] = new Sums();
         }
+
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
-                sums[i].rowSum += matrix[i][j];
-                sums[j].colSum += matrix[i][j];
+                sums[i].setRowSum(sums[i].getRowSum() + matrix[i][j]);
+                sums[j].setColSum(sums[j].getColSum() + matrix[i][j]);
             }
         }
+
         showMatrix(matrix);
+
         return sums;
     }
 
@@ -61,12 +65,12 @@ public class RolColSum {
             sums[i] = new Sums();
             cfs.add(CompletableFuture.runAsync(() -> {
                         int row = rowIndex.getAndIncrement();
-                        sums[row].rowSum = sumRow(matrix, row).join();
+                        sums[row].setRowSum(sumRow(matrix, row).join());
                     }
             ));
             cfs.add(CompletableFuture.runAsync(() -> {
                         int col = colIndex.getAndIncrement();
-                        sums[col].colSum = sumCol(matrix, col).join();
+                        sums[col].setColSum(sumCol(matrix, col).join());
                     }
             ));
         }
@@ -96,26 +100,4 @@ public class RolColSum {
             return sum;
         });
     }
-
-    public static class Sums {
-        private int rowSum;
-        private int colSum;
-
-        public int getRowSum() {
-            return rowSum;
-        }
-
-        public void setRowSum(int rowSum) {
-            this.rowSum = rowSum;
-        }
-
-        public int getColSum() {
-            return colSum;
-        }
-
-        public void setColSum(int colSum) {
-            this.colSum = colSum;
-        }
-    }
-
 }
