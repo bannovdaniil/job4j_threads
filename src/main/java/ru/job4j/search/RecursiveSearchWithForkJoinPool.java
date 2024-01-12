@@ -16,10 +16,6 @@ public class RecursiveSearchWithForkJoinPool<T> extends RecursiveTask<Integer> {
     private int left;
     private int right;
 
-    public RecursiveSearchWithForkJoinPool(T[] array) {
-        this.array = array;
-    }
-
     private RecursiveSearchWithForkJoinPool(T[] array, T element, int left, int right) {
         this.array = array;
         this.element = element;
@@ -27,12 +23,12 @@ public class RecursiveSearchWithForkJoinPool<T> extends RecursiveTask<Integer> {
         this.right = right;
     }
 
-    public int search(T element) {
+    public static <T> int search(T[] array, T element) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         return forkJoinPool.invoke(new RecursiveSearchWithForkJoinPool<>(array, element, 0, array.length - 1));
     }
 
-    private int fastLineSearch(T[] array, T element, int left, int right) {
+    private int fastLineSearch() {
         int result = -1;
         for (int i = left; i <= right; i++) {
             if (Objects.equals(array[i], element)) {
@@ -46,17 +42,25 @@ public class RecursiveSearchWithForkJoinPool<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (right - left <= FAST_SEARCH_RANGE) {
-            return fastLineSearch(array, element, left, right);
+            return fastLineSearch();
         }
         int middle = (right - left) / 2;
         RecursiveSearchWithForkJoinPool leftSearch = new RecursiveSearchWithForkJoinPool(array, element, left, middle);
         leftSearch.fork();
-        Integer result = (Integer) leftSearch.join();
-        if (result < 0) {
-            RecursiveSearchWithForkJoinPool rightSearch = new RecursiveSearchWithForkJoinPool(array, element, middle + 1, right);
-            rightSearch.fork();
-            result = (Integer) rightSearch.join();
+        Integer resultLeft = (Integer) leftSearch.join();
+
+        RecursiveSearchWithForkJoinPool rightSearch = new RecursiveSearchWithForkJoinPool(array, element, middle + 1, right);
+        rightSearch.fork();
+        Integer resultRight = (Integer) rightSearch.join();
+
+        if (resultLeft == -1 && resultRight == -1) {
+            return -1;
+        } else if (resultLeft == -1) {
+            return resultRight;
+        } else if (resultRight == -1) {
+            return resultLeft;
         }
-        return result;
+        
+        return Math.min(resultLeft, resultRight);
     }
 }

@@ -31,9 +31,8 @@ class RecursiveSearchWithForkJoinPoolTest {
     })
     void stringSearch(String element, int expected, String arrayString) {
         String[] array = arrayString.split(",");
-        RecursiveSearchWithForkJoinPool lineSearch = new RecursiveSearchWithForkJoinPool<>(array);
 
-        int result = lineSearch.search(element);
+        int result = RecursiveSearchWithForkJoinPool.search(array, element);
 
         Assertions.assertEquals(expected, result);
     }
@@ -59,9 +58,8 @@ class RecursiveSearchWithForkJoinPoolTest {
         for (int i = 0; i < stringArray.length; i++) {
             array[i] = Integer.valueOf(stringArray[i]);
         }
-        RecursiveSearchWithForkJoinPool lineSearch = new RecursiveSearchWithForkJoinPool<>(array);
 
-        int result = lineSearch.search(element);
+        int result = RecursiveSearchWithForkJoinPool.search(array, element);
 
         Assertions.assertEquals(expectedPosition, result);
     }
