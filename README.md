@@ -120,3 +120,5 @@ job4j.ru middle java developer
 3. ForkJoinPool [ru.job4j.search.RecursiveSearchWithForkJoinPool]
    Реализовать параллельный поиск индекса в массиве объектов. В целях оптимизации, если размер массива не больше 10,
    использовать обычный линейный поиск. Метод поиска должен быть обобщенным.
+4. CompletableFuture [ru.job4j.completablefuture.RolColSum]
+   Реализовать асинхронную версию программы. i- я задача считает сумму по i столбцу и i строке
