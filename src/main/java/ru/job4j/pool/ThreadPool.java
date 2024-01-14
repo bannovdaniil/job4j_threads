@@ -24,8 +24,7 @@ public class ThreadPool {
             threads.add(new Thread(() -> {
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
-                        Runnable job = tasks.poll();
-                        new Thread(job).start();
+                        tasks.poll().run();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
